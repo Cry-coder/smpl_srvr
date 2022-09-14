@@ -3,11 +3,10 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/Cry-coder/smpl_srvr/internal/domain/event"
+	"github.com/go-chi/chi/v5"
 	"net/http"
 	"strconv"
-
-	"GO_tash/sec_tr/internal/domain/event"
-	"github.com/go-chi/chi/v5"
 )
 
 type EventController struct {
@@ -110,13 +109,17 @@ func (c *EventController) Update() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var g event.St
 		err := json.NewDecoder(r.Body).Decode(&g)
+		fmt.Println(g)
 		if err != nil {
 			fmt.Print("Error while reading request body")
 		}
 		err = (*c.service).Update(&g)
 		if err != nil {
 			fmt.Printf("EventController.Update(): %s", err)
-			notFound(w, err)
+			err = notFound(w, err)
+			if err != nil {
+				fmt.Printf("EventController.Delete(): %s", err)
+			}
 		} else {
 			err = success(w, "Successful updated.")
 		}

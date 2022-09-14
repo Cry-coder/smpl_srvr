@@ -8,9 +8,9 @@ import (
 	"runtime/debug"
 	"syscall"
 
-	"GO_tash/sec_tr/internal/domain/event"
-	"GO_tash/sec_tr/internal/infra/http"
-	"GO_tash/sec_tr/internal/infra/http/controllers"
+	"github.com/Cry-coder/smpl_srvr/internal/domain/event"
+	"github.com/Cry-coder/smpl_srvr/internal/infra/http"
+	"github.com/Cry-coder/smpl_srvr/internal/infra/http/controllers"
 )
 
 // @title                       Test Server

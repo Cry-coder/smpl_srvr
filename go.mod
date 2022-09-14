@@ -1,4 +1,4 @@
-module GO_tash/sec_tr
+module github.com/Cry-coder/smpl_srvr
 
 go 1.18
 

@@ -1,11 +1,10 @@
 package http
 
 import (
+	"github.com/Cry-coder/smpl_srvr/internal/infra/http/controllers"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"net/http"
-	///"github.com/test_server/internal/infra/http/controllers"
-	"GO_tash/sec_tr/internal/infra/http/controllers"
 )
 
 func Router(eventController *controllers.EventController) http.Handler {

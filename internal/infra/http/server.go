@@ -12,7 +12,7 @@ func Server(
 	router http.Handler,
 ) error {
 	srv := &http.Server{
-		Addr:    fmt.Sprintf(":%d", 8081),
+		Addr:    fmt.Sprintf(":%d", 5652),
 		Handler: router,
 	}
 

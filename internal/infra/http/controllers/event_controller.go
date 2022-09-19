@@ -109,7 +109,7 @@ func (c *EventController) Update() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var g event.St
 		err := json.NewDecoder(r.Body).Decode(&g)
-		fmt.Println(g)
+		//fmt.Println(g)
 		if err != nil {
 			fmt.Print("Error while reading request body")
 		}

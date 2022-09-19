@@ -45,15 +45,15 @@ func AddEventRoutes(router *chi.Router, eventController *controllers.EventContro
 			eventController.FindOne(),
 		)
 		apiRouter.Delete(
-			"/delete/{id}",
+			"/{id}",
 			eventController.Delete(),
 		)
 		apiRouter.Post(
-			"/create",
+			"/",
 			eventController.Create(),
 		)
 		apiRouter.Put(
-			"/update",
+			"/",
 			eventController.Update(),
 		)
 	})

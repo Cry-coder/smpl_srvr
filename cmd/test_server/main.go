@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"os"
 	"os/signal"
 	"runtime/debug"
@@ -57,5 +58,8 @@ func main() {
 		fmt.Printf("http server error: %s", err)
 		exitCode = 2
 		return
+	}
+	if err = event.Session.Close(); err != nil {
+		log.Fatal("Error While closing db:", err)
 	}
 }

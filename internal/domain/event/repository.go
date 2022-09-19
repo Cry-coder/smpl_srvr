@@ -9,12 +9,12 @@ import (
 
 var settings = postgresql.ConnectionURL{
 	Host:     "localhost",
-	Database: "gettingup",
+	Database: "postgres",
 	User:     "postgres",
-	Password: "Matty",
+	Password: "postgresPass",
 }
 
-var session db.Session
+var Session db.Session
 
 type Dbinstanse interface {
 	FindAll() ([]St, error)
@@ -30,14 +30,17 @@ func NewRepository() Dbinstanse {
 
 func init() {
 	sess, err := postgresql.Open(settings)
-	session = sess
+
+	Session = sess
 	if err != nil {
 		log.Fatal(err)
 	}
+	//sess.Close()
+
 }
 func (u *St) FindAll() ([]St, error) {
 	var slice []St
-	err := session.Collection("staff").Find().All(&slice)
+	err := Session.Collection("staff").Find().All(&slice)
 	if err != nil {
 		return []St{}, err
 	}
@@ -46,8 +49,7 @@ func (u *St) FindAll() ([]St, error) {
 
 func (u *St) FindOne(id int64) (*St, error) {
 	var strct St
-	err := session.Collection("staff").Find(db.Cond{"personid": id}).One(&strct) // how to handle error if id number does not exist
-	//errorHandler(err)
+	err := Session.Collection("staff").Find(db.Cond{"personid": id}).One(&strct) // how to handle error if id number does not exist
 	if err != nil {
 		fmt.Println("erorr with unexisting id")
 		return &St{}, err
@@ -56,7 +58,7 @@ func (u *St) FindOne(id int64) (*St, error) {
 }
 
 func (u *St) Create(strct *St) (*St, error) {
-	_, err := session.Collection("staff").Insert(strct)
+	_, err := Session.Collection("staff").Insert(strct)
 	if err != nil {
 		return &St{}, err
 	}
@@ -64,7 +66,7 @@ func (u *St) Create(strct *St) (*St, error) {
 }
 
 func (u *St) Delete(id int64) error {
-	err := session.Collection("staff").Find(db.Cond{"personid": id}).Delete()
+	err := Session.Collection("staff").Find(db.Cond{"personid": id}).Delete()
 	if err != nil {
 		return err
 	}
@@ -74,7 +76,7 @@ func (u *St) Delete(id int64) error {
 func (u *St) Update(t *St) error {
 	var k St
 
-	res := session.Collection("staff").Find(db.Cond{"personid": t.Id})
+	res := Session.Collection("staff").Find(db.Cond{"personid": t.Id})
 	err := res.One(&k)
 	if err != nil {
 		return err

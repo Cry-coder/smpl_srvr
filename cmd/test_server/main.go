@@ -3,20 +3,20 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/Cry-coder/smpl_srvr/internal/domain/event"
+	"github.com/Cry-coder/smpl_srvr/internal/infra/http"
+	"github.com/Cry-coder/smpl_srvr/internal/infra/http/controllers"
 	"log"
 	"os"
 	"os/signal"
 	"runtime/debug"
 	"syscall"
-
-	"github.com/Cry-coder/smpl_srvr/internal/domain/event"
-	"github.com/Cry-coder/smpl_srvr/internal/infra/http"
-	"github.com/Cry-coder/smpl_srvr/internal/infra/http/controllers"
 )
 
 // @title                       Test Server
 // @version                     0.1.0
 // @description                 Test Server boilerplate
+
 func main() {
 	exitCode := 0
 	ctx, cancel := context.WithCancel(context.Background())
@@ -42,16 +42,24 @@ func main() {
 	}()
 
 	// Event
-	eventRepository := event.NewRepository()                         // створення нового репозиторію для зберігання даних
-	eventService := event.NewService(&eventRepository)               // створюємо сервіс який буде обробляти запити і передаємо туди репозиторій
+	eventRepository := event.NewRepository()
+
+	eventService := event.NewService(&eventRepository)
+
+	// створюємо сервіс який буде обробляти запити і передаємо туди репозиторій
 	eventController := controllers.NewEventController(&eventService) // передаємо сервісб івентконтроллер обробляє вхіні запити (з інтернету)
+
+	//  session
+
+	withSession := http.Session(http.Router(eventController))
 
 	// HTTP Server
 	err := http.Server(
 		ctx,
-		http.Router(
-			eventController,
-		),
+		withSession,
+		//http.Router(
+		//	eventController,
+		//),
 	)
 
 	if err != nil {

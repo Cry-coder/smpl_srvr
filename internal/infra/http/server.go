@@ -3,10 +3,14 @@ package http
 import (
 	"context"
 	"fmt"
+	"github.com/Cry-coder/smpl_srvr/internal/infra/http/controllers"
 	"net/http"
 	"time"
 )
 
+func Session(next http.Handler) http.Handler {
+	return controllers.SessionManager.LoadAndSave(next)
+}
 func Server(
 	ctx context.Context,
 	router http.Handler,

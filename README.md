@@ -1,42 +1,120 @@
+## Helpdesk API
+Here we've created helpdesk API for IT department where staff will be able to put theirs problems or questions forwarded for IT department. 
+
+### Helpdesk app logic
+
+After launching server you need to create admin role account using post request.
+This could be happened once or after cleaning database.  
+
+POST: `http://localhost:8007/v1/admin/create/admin`
+
+ `{
+"Fn": "Firstname",
+"Ln": "Lastname",
+"Email": "example@email.com",
+"Password": "strongpassword"
+}`
+
+Logging for admin and users processed at: 
+
+PUT: `http://localhost:8007/v1/login`
+
+After creating admin account and logging in we need to create profiles for our staff. Creating this type of accounts could be created only with admin account at: 
+
+POST: `http://localhost:8007/v1/admin/createuser`
+
+`{
+"Fn": "Firstname",
+"Ln": "Lastname",
+"Email": "example1@email.com",
+"Password": "strongpassword"
+}`
+
+## With admin account we able:
+- Login to the system
+
+PUT: `http://localhost:8007/v1/login`
+
+- View account profile
+
+GET: `http://localhost:8007/v1/admin/profile`
+- View all users profiles
+
+GET: `http://localhost:8007/v1/admin/all`
+
+- One user profile
 
 
-# Test Routes
+GET: `http://localhost:8007/v1/admin/one/{id}`
 
-## Ping
+- All questions
 
-GET:`http://localhost:8081/ping`
 
-## Events List
+GET: `http://localhost:8007/v1/admin/questions`
 
-GET:`http://localhost:8007/v1/events`
+- One question
 
-## Event (by ID)
+GET: `http://localhost:8007/v1/admin/question/{id}`
 
-GET:`http://localhost:8007/v1/events/{id}`
+- Delete user by ID
 
-## Create record 
 
-POST:`http://localhost:8007/v1/events`
+DELETE: `http://localhost:8007/v1/admin/delete/{id}`
+- Delete question by ID
 
-## Update 
 
-PUT:`http://localhost:8007/v1/events`
+DELETE: `http://localhost:8007/v1/admin/delete/question/{id}`
 
-## Delete  (by ID)
+- Create user account
 
-GET:`http://localhost:8007/v1/events/{id}`
+POST: `http://localhost:8007/v1/admin/createuser`
 
-# Table example
-## Change password and db name in repository.go settings
-`CREATE TABLE staff (
-personid SERIAL,
-lastname varchar(15),
-firstname varchar(15),
-city varchar(15)
-);`
+- Update question
 
-`INSERT INTO staff (lastname, firstname, city)
-VALUES ('Klichko', 'Vitaliy', 'Kyiv');`
+PUT: `http://localhost:8007/v1/admin/update/question`
 
-`INSERT INTO staff (lastname, firstname, city)
-VALUES ('Klichko', 'Volodumir', 'Kyiv');`
+`{
+"QuestionId": {id},
+"Status": {bool}
+}`
+- Logout from the system
+
+GET: `http://localhost:8007/v1/admin/logout`
+
+
+## After users accounts were created by admin account they are able:
+- Login to the system
+
+PUT: `http://localhost:8007/v1/login`
+
+- View account profile
+
+GET: `http://localhost:8007/v1/user/profile`
+
+- Update firstname, lastname and password in theirs account
+
+PUT: `http://localhost:8007/v1/user/update/profile`
+
+- Create questions
+
+POST: `http://localhost:8007/v1/user/cr`
+`{
+"Question": "Question string"
+}`
+- Update questions
+
+PUT: `http://localhost:8007/v1/users/update/question`
+
+`{ "QuestionId": {id},
+"Question": "Changed question" }`
+- Find questions by id
+
+GET: `http://localhost:8007/v1/users/question/{id}`
+- Logout from the system
+
+GET: `http://localhost:8007/v1/user/logout`
+
+
+
+
+

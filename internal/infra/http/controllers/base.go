@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func success(w http.ResponseWriter, body interface{}) error {
+func success(w http.ResponseWriter, body ...interface{}) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 

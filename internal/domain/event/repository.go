@@ -2,15 +2,18 @@ package event
 
 import (
 	"database/sql"
+	//_ "embed"
 	"flag"
 	"fmt"
-	"github.com/upper/db/v4/adapter/postgresql"
-	"os"
-
 	_ "github.com/lib/pq"
 	"github.com/upper/db/v4"
+	"github.com/upper/db/v4/adapter/postgresql"
 	"log"
+	"os"
 )
+
+////go:embed sec_tr\migration\tables.sql
+//var contents []byte
 
 var Session db.Session
 var Pool *sql.DB
@@ -36,8 +39,10 @@ func NewRepository() Dbinstanse {
 }
 
 func init() {
-	dsn := flag.String("dsn", "postgres://postgres:Matty@localhost/postgres?sslmode=disable", "postgres connection string")
-
+	path := flag.String("path", "./migration/tables.sql", "path to tables.sql")
+	migrate := flag.Bool("migrate", false, "should migrate - drop all tables")
+	dsn := flag.String("dsn", "postgres://postgres:postgres@localhost/postgres?sslmode=disable", "postgres connection string")
+	flag.Parse()
 	var err error
 	Pool, err = sql.Open("postgres", *dsn)
 	if err != nil {
@@ -49,12 +54,12 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	//fmt.Println(string(contents))
 	// running migration
-	migrate := flag.Bool("migrate", false, "should migrate - drop all tables")
+
 	if *migrate {
 		fmt.Println("Running migration")
-		err = runMigrate(Session)
+		err = runMigrate(Session, *path)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -202,8 +207,9 @@ func (u *St) UserCheck(email string) (bool, error) {
 	return Session.Collection("staff").Find(db.Cond{"email": email}).Exists()
 }
 
-func runMigrate(db db.Session) error {
-	script, err := os.ReadFile("./migration/tables.sql")
+func runMigrate(db db.Session, path string) error {
+
+	script, err := os.ReadFile(path) //"..\\migration\\tables.sql")
 	if err != nil {
 		return err
 	}

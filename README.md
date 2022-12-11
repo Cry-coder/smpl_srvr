@@ -3,6 +3,10 @@ Here we've created helpdesk API for IT department where staff will be able to pu
 
 ### Helpdesk app logic
 
+First time running server we need connect to postgresql database and create needed tables and relations. For this propose run:
+`go run main.go -migrate -dsn "postgres://{user}:{Password}@localhost/{databaseName}?sslmode=disable" -path "{Exect path to tables.sql}"`
+
+
 After launching server you need to create admin role account using post request.
 This could be happened once or after cleaning database.  
 

@@ -140,7 +140,6 @@ func (c *EventController) OneQuestion() http.HandlerFunc {
 		if err != nil {
 			id := SessionManager.Get(r.Context(), sessionKeyUserId)
 			_, slice, err := (*c.service).FindOne(id.(int64))
-			//fmt.Print(len(*slice))
 			if len(*slice) == 0 {
 				_, err = w.Write([]byte("Seems you have not created questions yet"))
 				if err != nil {
@@ -176,6 +175,7 @@ func (c *EventController) Delete() http.HandlerFunc {
 		err = (*c.service).Delete(id)
 		if err != nil {
 			fmt.Printf("EventController.Delete(): %s", err)
+			return
 		}
 		err = success(w, "Successful deleted.")
 		if err != nil {
@@ -200,6 +200,7 @@ func (c *EventController) DeleteQuestion() http.HandlerFunc {
 		err = (*c.service).DeleteQuestion(qid)
 		if err != nil {
 			fmt.Printf("EventController.DeleteQuestion(): %s", err)
+			return
 		}
 		err = success(w, "Successfully deleted.")
 		if err != nil {
@@ -506,7 +507,16 @@ func (c *EventController) FindOneAdmin() http.HandlerFunc {
 		}
 		userSt, questionSlice, err := (*c.service).FindOne(id)
 		if err != nil {
+			if err == db.ErrNoMoreRows {
+				_, err = w.Write([]byte("User with this ID does not existing."))
+				if err != nil {
+					fmt.Printf("EventController.FindOneQuestion(): %s", err)
+					return
+				}
+				return
+			}
 			fmt.Printf("EventController.FindOneQuestion(): %s", err)
+
 		}
 		err = success(w, userSt, questionSlice)
 		if err != nil {
@@ -550,6 +560,17 @@ func (c *EventController) FindOneQuestionAdmin() http.HandlerFunc {
 		}
 
 		y, err := (*c.service).FindOneQuestion(int(id))
+		if err != nil {
+			if err == db.ErrNoMoreRows {
+				_, err = w.Write([]byte("Question does not exist."))
+				if err != nil {
+					fmt.Printf("EventController.FindOneQuestionAdmin(): %s", err)
+				}
+				return
+			}
+			fmt.Printf("EventController.FindOneQuestionAdmin(): %s", err)
+			return
+		}
 		err = success(w, y)
 		if err != nil {
 			err = internalServerError(w, err)

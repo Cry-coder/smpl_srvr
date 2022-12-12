@@ -54,7 +54,7 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	//fmt.Println(string(contents))
+
 	// running migration
 
 	if *migrate {
@@ -70,15 +70,6 @@ func init() {
 func (u *St) FindAll() ([]St, error) {
 	var slice []St
 	err := Session.Collection("staff").Find().All(&slice)
-	//for _, t := range slice {
-	//	var slic []Questions
-	//	err := Session.Collection("questions").Find(db.Cond{"stuff_id": t.Id}).All(&slic)
-	//	//err := Session.SQL().Select("*").From("questions").Where("stuff_id = ?", t.Id).All(&t.Str)
-	//
-	//	if err != nil {
-	//		return nil, err
-	//	}
-	//}
 	if err != nil {
 		return nil, err
 	}
@@ -112,13 +103,6 @@ func (u *St) FindOneQuestion(qid int) (*Questions, error) {
 	if err != nil {
 		return nil, err
 	}
-	//} else {
-	//	err := Session.Collection("questions").Find(db.And(db.Cond{"staff_id": sid}, db.Cond{"id": qid})).One(&slicee)
-	//	if err != nil {
-	//		return nil, err
-	//	}
-	//}
-
 	return &slicee, nil
 }
 func (u *St) Create(strct *St) (*St, error) {
